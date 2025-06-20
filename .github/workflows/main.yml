@@ -1,30 +1,38 @@
-name: 🚀 Deploy Hasan Auto-Reply Bot
+name: Hasan Bot PM2 Compatible
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  deploy:
+  run-bot:
     runs-on: ubuntu-latest
+    timeout-minutes: 360  # 🕒 6 hour max runtime
 
     steps:
-      - name: ⬇️ Checkout Repository
-        uses: actions/checkout@v3
+    - name: 📥 Clone Repository
+      uses: actions/checkout@v3
 
-      - name: ⚙️ Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
 
-      - name: 📦 Install Dependencies
-        run: npm ci
+    - name: 📦 Install Dependencies
+      run: npm install
 
-      - name: 🔐 Create .env with SESSION_ID
-        run: |
-          echo "SESSION_ID=${{ secrets.SESSION_ID }}" > .env
+    - name: 🔍 Check PM2 Compatibility (Optional)
+      run: |
+        npm install -g pm2
+        node -v
+        pm2 -v
+        echo "✅ PM2 Ready! You can deploy this repo to any VPS using PM2."
 
-      - name: ▶️ Start Bot
-        run: node index.js
+    - name: ✅ Run Bot Temporarily
+      run: |
+        echo "💬 Running bot (test run)..."
+        node index.js &
+        sleep 300
+        echo "🛑 Stopping test after 5 min"
