@@ -1,4 +1,4 @@
-name: Deploy WhatsApp Bot
+name: 🚀 Deploy Hasan Auto-Reply Bot
 
 on:
   push:
@@ -7,25 +7,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
+      - name: ⬇️ Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install dependencies
-        run: npm install
+      - name: 📦 Install Dependencies
+        run: npm ci
 
-      - name: Create session.env file from secret
+      - name: 🔐 Create .env with SESSION_ID
         run: |
           echo "SESSION_ID=${{ secrets.SESSION_ID }}" > .env
 
-      - name: Run WhatsApp Bot
-        run: |
-          node index.js
+      - name: ▶️ Start Bot
+        run: node index.js
